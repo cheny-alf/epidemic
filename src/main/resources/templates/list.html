@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{list.title}">SpringBoot实战项目</title>
+
+    <link rel="stylesheet" th:href="@{/bootstrap.css}">
+</head>
+<body>
+
+<h2 th:text="#{list.h2}">疫情情况如下</h2>
+
+<label>
+    <a class="btn btn-sm" th:href="@{/(lan='zh_CN')}">中文</a>
+    <a class="btn btn-sm" th:href="@{/(lan='en_US')}">英文</a>
+</label>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th><p th:text="#{list.table.name1}">地区</p></th>
+        <th><p th:text="#{list.table.name2}">现有确诊</p></th>
+        <th><p th:text="#{list.table.name3}">累计确诊</p></th>
+        <th><p th:text="#{list.table.name4}">治愈</p></th>
+        <th><p th:text="#{list.table.name5}">死亡</p></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="data:${dataList}">
+        <td th:text="${data.name}">name</td>
+        <td th:text="${data.nowConfirm}">nowConfirm</td>
+        <td th:text="${data.confirm}">confirm</td>
+        <td th:text="${data.heal}">heal</td>
+        <td th:text="${data.dead}">dead</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
