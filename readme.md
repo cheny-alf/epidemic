@@ -22,3 +22,5 @@
 
 项目地址：https://github.com/cheny-alf/epidemic
 ![Image text](https://github.com/cheny-alf/epidemic/blob/master/trend.png)
+![Image text](https://github.com/cheny-alf/epidemic/blob/master/Abroad.png)
+![Image text](https://github.com/cheny-alf/epidemic/blob/master/map.png)
