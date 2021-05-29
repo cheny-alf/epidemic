@@ -5,13 +5,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GraphBarBean implements Comparable<GraphBarBean> {
+public class GraphColumnarBean implements Comparable<GraphColumnarBean> {
 
-    private String name;
+    private String area;
     private int fromAbroad;
 
     @Override
-    public int compareTo(GraphBarBean o) {
+    public int compareTo(GraphColumnarBean o) {
         return o.getFromAbroad() - this.getFromAbroad();
     }
 }

@@ -17,13 +17,11 @@ public class MyLocaleResolver implements LocaleResolver {
             String[] split = lan.split("_");
             locale = new Locale(split[0], split[1]);
         }
-
         return locale;
     }
 
     @Override
-    public void setLocale(HttpServletRequest httpServletRequest,
-                          HttpServletResponse httpServletResponse, Locale locale) {
+    public void setLocale(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Locale locale) {
 
     }
 }

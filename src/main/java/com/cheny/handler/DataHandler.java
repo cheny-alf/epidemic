@@ -1,18 +1,19 @@
 package com.cheny.handler;
 
 import com.cheny.bean.DataBean;
+import com.cheny.bean.DataBean;
 import com.cheny.service.DataService;
-import com.cheny.util.HttpConnUtil;
+import com.cheny.util.HttpURLConnectionUtil;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.FileReader;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,105 +23,94 @@ public class DataHandler {
     @Autowired
     private DataService dataService;
 
-    public static void main(String[] args) {
+    public static String urlStr = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5";
+
+    public static void main(String[] args) throws Exception {
         getData();
     }
 
 
-//    @PostConstruct 被此注解修饰的方法  会在服务器启动时执行一次
-    //  往往用来进行数据初始化
-
-    @PostConstruct
+//    @PostConstruct
     public void saveData() {
-        System.out.println("初始化数据的存储");
         List<DataBean> dataBeans = getData();
-
-        // 先清空 再存储
+        // 先将数据清空  然后存储数据
         dataService.remove(null);
         dataService.saveBatch(dataBeans);
+
     }
 
-
-    private static final SimpleDateFormat dateFormat =
-            new SimpleDateFormat("HH:mm:ss");
-
-    //    @Scheduled(fixedDelay = 10000)
-//    @Scheduled(fixedRate = 10000)
-//    @Scheduled(cron = "0 0/1 * * * ? ")
+    // 配置定时执行的注解  支持cron表达式
+//    @Scheduled(cron = "0 0/1 * * * ?")
     public void updateData() {
-        System.out.println("更新数据,当前时间" + dateFormat.format(new Date()));
-        List<DataBean> dataBeans = getData();
+        System.out.println("更新数据");
 
-        // 先清空 再存储
-        dataService.remove(null);
-        dataService.saveBatch(dataBeans);
+        // TODO 增加监听  提供用户订阅功能的   比如关注黑龙江省份 新增人数的变化
+
+        //  邮件   登录  spring-security（AOP）  复杂的springboot项目分析
+        saveData();
     }
 
-
-    public static String urlStr = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5";
 
     public static List<DataBean> getData() {
-//        StringBuilder builder = new StringBuilder();
-//        try {
-//        String  tmpJson = "{\"hello\":\"world\"}";
-//
 //        Gson gson = new Gson();
-//        Map map = gson.fromJson(tmpJson,Map.class);
+////        Gson gson1 = new GsonBuilder().create();
+//        Map map = gson.fromJson(testStr,Map.class);
 //        System.out.println(map);
 
-//            // 读取tmp.json
-//            FileReader fr = new FileReader("tmp.json");
-//            char[] cBuf = new char[1024];
-//
-//            int cRead = 0;
-//
-//            while ((cRead = fr.read(cBuf)) > 0) {
-//                builder.append(new String(cBuf, 0, cRead));
-//            }
-//            fr.close();
-//        } catch (Exception e) {
-//
+
+        // 读取文件中的文本内容   然后再转化为java对象
+//        File file = new File("tmp.txt");
+
+//        FileReader fr = new FileReader("tmp.txt");
+//        char[] cBuf = new char[1024];
+//        int cRead = 0;
+//        StringBuilder builder = new StringBuilder();
+//        while ((cRead = fr.read(cBuf)) > 0) {
+//            builder.append(new String(cBuf, 0, cRead));
 //        }
-
-
-        String str = HttpConnUtil.doGet(urlStr);
+//
+//        fr.close();
 
 //        System.out.println(builder.toString());
-        // 层层读取  找到要显示的数据  存到ArrayList之中
+
+
+        // 实时获取数据
+        String respJson = HttpURLConnectionUtil.doGet(urlStr);
 
         Gson gson = new Gson();
-        Map map = gson.fromJson(str, Map.class);
+        Map map = gson.fromJson(respJson, Map.class);
 
+        // 此时增加了一层处理  而且data对应的数据格式是string
         String subStr = (String) map.get("data");
         Map subMap = gson.fromJson(subStr, Map.class);
 
+//        System.out.println(map);
+
         ArrayList areaList = (ArrayList) subMap.get("areaTree");
-
         Map dataMap = (Map) areaList.get(0);
-
         ArrayList childrenList = (ArrayList) dataMap.get("children");
 
-        ArrayList<DataBean> result = new ArrayList();
+        // 遍历然后转化
+        List<DataBean> result = new ArrayList<>();
 
         for (int i = 0; i < childrenList.size(); i++) {
-
             Map tmp = (Map) childrenList.get(i);
             String name = (String) tmp.get("name");
 
             Map totalMap = (Map) tmp.get("total");
-
             double nowConfirm = (Double) totalMap.get("nowConfirm");
             double confirm = (Double) totalMap.get("confirm");
-            double dead = (Double) totalMap.get("dead");
             double heal = (Double) totalMap.get("heal");
+            double dead = (Double) totalMap.get("dead");
 
-            DataBean dataBean = new DataBean(null, name, (int) nowConfirm,
-                    (int) confirm, (int) dead, (int) heal);
+            DataBean dataBean = new DataBean(name, (int) nowConfirm, (int) confirm,
+                    (int) heal, (int) dead);
+
             result.add(dataBean);
-
         }
 
 //        System.out.println(result);
+
         return result;
     }
 }

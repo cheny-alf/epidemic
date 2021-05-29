@@ -7,16 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Data
-@AllArgsConstructor
+@Data @AllArgsConstructor
 @NoArgsConstructor
 @TableName("illness")
 public class DataBean implements Serializable {
 
-    private Long id;
-    private String name;
+    private String area;
     private int nowConfirm;
     private int confirm;
-    private int dead;
     private int heal;
+    private int dead;
 }

@@ -16,34 +16,24 @@
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
 
-    var dateStr = [[${dateList}]];
-    var nowConfirmStr = [[${nowConfirmList}]];
+    var str = [[${list}]];
 
     // 指定图表的配置项和数据
     var option = {
         title: {  // 标题组件
-            text: '全国现有确诊趋势'
+            text: '全国现有确诊构成'
         },
         tooltip: {  // 提示框组件
             trigger: 'axis'
         },
-        legend: {  // 曲线含义说明
-            data: ['现有确诊']
-        },
-        xAxis: {
-            // 转化为json对象
-            data: JSON.parse(dateStr)
-            // data: dateStr
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [{
-            name: '现有确诊',
-            data: JSON.parse(nowConfirmStr),
-            // data: nowConfirmStr,
-            type: 'line'
-        }]
+        series: [
+            {
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: JSON.parse(str)
+            }
+        ]
     };
 
     // 使用刚指定的配置项和数据显示图表。

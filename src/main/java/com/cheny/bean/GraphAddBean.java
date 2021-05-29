@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GraphBean {
+public class GraphAddBean {
 
     private String date;
-    private int nowConfirm;
+    private int addConfirm;
+    private int addSuspect;
 }
