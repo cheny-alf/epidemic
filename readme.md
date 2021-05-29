@@ -21,3 +21,4 @@
               利用Spring-security实现针对不同的用户，赋予不同的权限，然后跳转不同的页面。
 
 项目地址：https://github.com/cheny-alf/epidemic
+![Image text](https://github.com/cheny-alf/epidemic/blob/master/%E5%85%A8%E5%9B%BD%E7%96%AB%E6%83%85%E6%96%B0%E5%A2%9E%E8%B6%8B%E5%8A%BF.png)
